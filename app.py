@@ -1,71 +1,125 @@
 from flask import Flask, render_template, request
+import math
 
-app = Flask(__name__)
+app=Flask(__name__)
 
-@app.route('/') 
+# Renderizamos un archivo estático html [DEBE ESTAR EN LA CARPETA TEMPLEATES]
+@app.route('/')
 def index():
-    titulo="IDGS804 - Intro Flask"
-    listado=['Carlos','Daniel']
-    return render_template('index.html', title=titulo, listado=listado)
+    titulo="IDGS-804-Flask"
+    listado=['Carlos', 'Oscar', 'Miguel']
+    return render_template('index.html', titulo=titulo, lista=listado)
 
-@app.route('/saludo1')
-def saludo1():
-    return render_template('saludo1.html')
+# Ruta para otra página
+@app.route("/formularios")
+def formularios():
+    return render_template('formularios.html')
 
-@app.route('/saludo2')
-def saludo2():
-    return render_template('saludo2.html')
+@app.route('/reportes')
+def reportes():
+    return render_template('reportes.html')
 
-@app.route('/operasBas')
-def operasBas():
-    return render_template('operasBas.html')
+@app.route('/alumnos')
+def alumnos():
+    return render_template('alumnos.html')
 
-@app.route('/resultado', methods=['GET', 'POST'])
-def resul():
-    n1=request.form.get('num1')
-    n2=request.form.get('num2')
-    return f"<h1>La suma es: {float(n1)+float(n2)}</h1>"
+@app.route('/distancia', methods=["GET", "POST"])
+def distancia():
+    x1=0
+    x2=0
+    y1=0
+    y2=0
+    res=0
+    if request.method == "POST":
+        x1=int(request.form.get("x1"))
+        x2=int(request.form.get("x2"))
+        y1=int(request.form.get("y1"))
+        y2=int(request.form.get("y2"))
+        res = math.sqrt(((x2 - x1)*(x2-x1) + (y2 - y1)*(y2 - y1)))
+    return render_template('distancia.html',x1=x1,x2=x2,y1=y1,y2=y2,res=res)
 
-
-
+# Otra ruta que tiene un metodo que retorna un saludo
 @app.route('/hola')
-def func():
-    return "Hola Mundo - Hola pequeñuelos"
+def hola():
+    return "Hola al cuadrado!"
 
-@app.route("/user/<string:user>") 
+# Podemos poner una variable en la ruta
+@app.route('/user/<string:user>')
 def user(user):
-    return f'Hola, {user}'
+    return f"Hello, {user}!!!!!"
+# f"mensaje {user}"" es igual a .format(user)
 
-@app.route("/numero/<int:n>") 
+@app.route("/numero/<int:n>")
 def numero(n):
-    return f'<h1>Número: {n}</h1>'
+    return "Numero: {}".format(n)
 
 @app.route("/user/<int:id>/<string:username>")
-def username(id,username):
-    return f"<h1>Hola {username}, tu id es: {id}</h1>"
+def username(id, username):
+    return "ID: {} nombre: {}".format(id, username)
 
-@app.route("/suma/<float:n1>/float:n2") 
-def suma(n1,n2):
-    return f"<h1>la suma es: {n1+n2}</h1>"
+@app.route("/suma/<float:n1>/<float:n2>")
+def func(n1,n2):
+    return "La suma es: {}".format(n1+n2)
 
+# Se sobreescribe el valor si existe
 @app.route("/default/")
-@app.route("/default/<string:parm>")
-def func2(parm="Juan"):
-    return f"<h1>Hola {parm}</h1>"
+@app.route("/default/<string:param>")
+def function(param="juan"):
+    return f"<h1>¡Hola, {param}!<h1>"
 
 @app.route("/operas")
 def operas():
     return '''
         <form>
-            <label for "name">Name:</label>
-            <input type ="text" id="name" name="name" required>
-            </br>
-            <label for "name">apaterno:</label>
-            <input type ="text" id="name" name="name" required>
-            </br>
-            <input type= "submit" value="Submit">
-        </form>
-'''
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
 
-if __name__ =='__main__':
-    app.run(debug=True) 
+            <label for="appP">Apellido Paterno:</label>
+            <input type="text" id="appP" name="appP" required>
+        </form>
+    '''
+
+@app.route("/operasBas",  methods=["GET", "POST"])
+def operas1():
+    n1=0
+    n2=0
+    res=0
+    operacion=''
+    if request.method == "POST":
+        n1=request.form.get("n1")
+        n2=request.form.get("n2")
+        operacion=request.form.get("opera")
+
+    if operacion == "suma":
+        res = float(n1) + float(n2)
+    elif operacion == "resta":
+        res = float(n1) - float(n2)
+    elif operacion == "multip":
+        res = float(n1) * float(n2)
+    elif operacion == "division":
+        res = float(n1) / float(n2)
+    else:
+        res = 0
+    return render_template("operasBas.html",operacion=operacion,n1=n1,n2=n2,res=res)
+
+@app.route("/resultado", methods=["GET", "POST"])
+def resultado():
+    n1=request.form.get("n1")
+    n2=request.form.get("n2")
+    operacion=request.form.get("opera")
+
+    if operacion == "suma":
+        res = float(n1) + float(n2)
+    elif operacion == "resta":
+        res = float(n1) - float(n2)
+    elif operacion == "multip":
+        res = float(n1) * float(n2)
+    elif operacion == "division":
+        res = float(n1) / float(n2)
+    else:
+        res = 0
+    return f"El resultado de la operación {operacion} es: {res}"
+
+# Con esto inicializamos el archivo
+if __name__ == '__main__':
+    app.run(debug=True)

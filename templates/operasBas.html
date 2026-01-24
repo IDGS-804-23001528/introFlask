@@ -1,17 +1,48 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<form method="post" action="/resultado">
+<form method="POST" action="/operasBas">
+
     <div class="mb-3">
-        <label for="num1" class="form-label">Numero 1:</label>
-        <input type="number" class="form-control" id="num1" name="num1">
-    </div>
-    <div class="mb-3">
-        <label for="num2" class="form-label">Numero 2:</label>
-        <input type="number" class="form-control" id="num2" name="num2">
+        <label for="n1" class="form-label">Número 1:</label>
+        <input type="number" class="form-control" id="n1" name="n1" required>
     </div>
 
-    <button type="submit" class="btn btn-primary">calcular</button>
+    <div class="mb-3">
+        <label for="n2" class="form-label">Número 2:</label>
+        <input type="number" class="form-control" id="n2" name="n2" required>
+    </div>
+
+    <label class="form-label">Seleccione la operación:</label>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="opera" value="suma" checked>
+        <label class="form-check-label">Suma</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="opera" value="resta">
+        <label class="form-check-label">Resta</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="opera" value="multip">
+        <label class="form-check-label">Multiplicación</label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="radio" name="opera" value="division">
+        <label class="form-check-label">División</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Calcular</button>
 </form>
+
+{% if res is not none %}
+    <h2 class="mt-4">
+        El resultado de la operación {{ operacion }} entre {{ n1 }} y {{ n2 }} es:
+        {{ "%.2f"|format(res) }}
+    </h2>
+{% endif %}
 
 {% endblock %}
