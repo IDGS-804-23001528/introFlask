@@ -1,14 +1,15 @@
-{% extends "layout.html"%}
-{% block content %}
+{% extends "layout.html" %}
 {% import "_macros.html" as macros %}
 
-<form action="/saludo1" method="POST">
-    {{macros.datos("n1","Ingrese el primer numero", "number")}}
-    {{macros.datos("nombre","Ingrese el primer numero")}}
-    {{macros.datos("constrasenia","Ingrese la constraseña", "password")}}
+{% block content %}
 
-    <button type="submit" class="btn btn-primary">Calcular</button>
+<form method="POST" action=""> 
+    {{ macros.datos('nombre','Escribe tu nombre') }}
+    {{ macros.datos('edad','Escribe tu edad') }}
+    {{ macros.datos('email','Escribe tu email') }}
+    {{ macros.datos('password','Escribe tu contraseña', 'password') }}
 </form>
 
 {% endblock %}
+
 

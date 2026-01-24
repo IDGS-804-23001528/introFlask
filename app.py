@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request
 import math
+import forms
+from flask_wtf.csrf import CSRFProtect 
 
-app=Flask(__name__)
+app = Flask(__name__)
+app.secret_key = 'clave_secreta'
+csrf = CSRFProtect()
+
 
 # Renderizamos un archivo estático html [DEBE ESTAR EN LA CARPETA TEMPLEATES]
 @app.route('/')
@@ -19,9 +24,6 @@ def formularios():
 def reportes():
     return render_template('reportes.html')
 
-@app.route('/alumnos')
-def alumnos():
-    return render_template('alumnos.html')
 
 @app.route('/distancia', methods=["GET", "POST"])
 def distancia():
@@ -120,6 +122,21 @@ def resultado():
         res = 0
     return f"El resultado de la operación {operacion} es: {res}"
 
-# Con esto inicializamos el archivo
+
+@app.route("/alumnos", methods=['GET', 'POST'])
+def alumnos():
+    mat=0
+    nom=''
+    ape=''
+    email=''
+    alumno_clas=forms.userForm(request.form)
+    if request.method=='POST' and alumno_clas.validate():
+        mat=alumno_clas.matricula.data
+        nom=alumno_clas.nombre.data 
+        ape=alumno_clas.apellido.data
+        email=alumno_clas.correo.data
+    return render_template('alumnos.html',form=alumno_clas,mat=mat,nom=nom,ape=ape,email=email)
+
 if __name__ == '__main__':
+    csrf.init_app(app)
     app.run(debug=True)
