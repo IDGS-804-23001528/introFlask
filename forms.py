@@ -1,20 +1,39 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, IntegerField
-from wtforms import validators
+from wtforms import Form
+from wtforms import StringField, IntegerField, PasswordField, RadioField
+from wtforms import EmailField, validators
 
-class userForm(FlaskForm):
-    matricula = IntegerField('Matricula', [
-        validators.DataRequired(message='La matricula es requerida')
+class UserForm(Form):
+    matricula=IntegerField('Matricula',[
+        validators.DataRequired(message="El campo es requerido"),
+        validators.NumberRange(min=100, max=1000, message="Ingrese un valor válido")
+    ])
+    nombre=StringField('Nombre', [
+        validators.DataRequired(message="El campo es requerido"),
+        validators.length(min=3, max=10, message="Ingrese un nombre válido")
+    ])
+    apaterno=StringField('Apaterno', [
+        validators.DataRequired(message="El campo es requerido")
+    ])
+    amaterno=StringField('Amaterno', [
+        validators.DataRequired(message="El campo es requerido")
+    ])
+    correo=StringField('Correo', [
+        validators.Email(message="Ingrese un correo válido")
     ])
 
+from wtforms import Form, StringField, IntegerField, RadioField, validators
+
+class CinepolisForm(Form):
     nombre = StringField('Nombre', [
-        validators.DataRequired(message='El campo nombre es requerido')
+        validators.DataRequired(message="El campo es requerido"),
+        validators.length(min=3, max=10, message="Ingrese un nombre valido")
     ])
-
-    apellido = StringField('Apellido', [
-        validators.DataRequired(message='El campo apellido es requerido')
-    ])
-
-    correo = EmailField('Correo', [
-        validators.DataRequired(message='El campo correo es requerido')
-    ])
+    compradores = IntegerField('Cantidad Compradores',[
+        validators.DataRequired(message="El campo es requerido"),
+        validators.NumberRange(min=1, message="Ingrese un valor valido")
+        ])
+    cineco = RadioField('Es Cineco', choices=[('no','No'),('si','Si')])
+    boletos = IntegerField('Cantidad Boletos',[
+        validators.DataRequired(message="El campo es requerido"),
+        validators.NumberRange(min=1, message="Ingrese un valor valido")
+        ])

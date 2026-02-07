@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cinépolis</title>
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='bootstrap/bootstrap-5.0.2-dist/css/bootstrap.min.css') }}">
+ 
+    <style>
+      body { margin: 0; background-color: #0b3b8c; }
+      .cine-bg {
+        background: url("{{ url_for('static', filename='img/Cine.png') }}") center/cover no-repeat;
+        height: 100vh; width: 100vw;
+      }
+      .panel {
+        border: 3px solid white; padding: 15px;
+        color: white; background: rgba(0, 0, 0, 0.5);
+      }
+      .panel-title {
+        position: relative; top: -25px;
+        background: #0b3b8c; display: inline-block;
+        padding: 0 10px; font-weight: bold;
+      }
+      .logo-text { font-size: 3.5rem; font-weight: bold; text-align: center; line-height: 1; }
+      .subtitle { text-align: center; letter-spacing: 5px; font-weight: bold; border-top: 2px solid white; }
+    </style>
+  </head>
+ 
+  <body>
+    {% import "_macros.html" as macros %} 
+
+    <article class="cine-bg d-flex flex-column justify-content-center">
+      <div class="container-fluid px-5">
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-danger text-center py-1 mb-3">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form action="/cinepolis" method="post" novalidate>
+          {{ form.csrf_token }}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"></input>
+ 
+          <div class="row align-items-start">
+            <div class="col-md-4">
+              <div class="panel">
+                <span class="panel-title">Entradas</span>
+                {{ macros.camposNuevos(form.nombre) }} 
+                {{ macros.camposNuevos(form.compradores) }} 
+                {{ macros.camposNuevos(form.cineco) }} 
+                {{ macros.camposNuevos(form.boletos) }}
+              </div>
+            </div>
+ 
+            <div class="col-md-4 d-flex flex-column justify-content-center">
+              <div class="logo-text text-white">Cinépolis</div>
+              <div class="subtitle text-white">LA CAPITAL DEL CINE</div>
+            </div>
+ 
+            <div class="col-md-4">
+              <div class="panel">
+                <span class="panel-title">Salidas</span>
+                <div class="mb-2">
+                  <label class="form-label">Total a Pagar</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg text-center fw-bold"
+                    value="${{ '%.2f'|format(Total) }}"
+                    readonly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+          <div class="row justify-content-center mt-4">
+            <div class="col-md-4 text-center panel">
+              <span class="panel-title">Acciones</span>
+              <div class="d-flex justify-content-around mt-2">
+                <button type="submit" class="btn btn-light fw-bold">Procesar</button>
+                <a href="/" class="btn btn-light fw-bold">Salir</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </article>
+ 
+   <script src="{{ url_for('static', filename='bootstrap/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js') }}"></script>
+  </body>
+</html>
